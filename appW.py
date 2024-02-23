@@ -1,10 +1,6 @@
-from flask import Flask, render_template, request, send_file
 from PIL import Image, ImageDraw, ImageFont
-import os
 
-app = Flask(__name__)
-cor_pastel_dark = (212,178,119)
-def gerar_imagem_alta_definicao_com_imagem(sigla, extenso, cor_sigla, caminho_imagem, nome_arquivo_saida, cor_pastel_dark):
+def gerar_imagem_alta_definicao_com_imagem(sigla, extenso, cor_sigla, caminho_imagem, nome_arquivo_saida):
     largura = 900
     altura = 230
     resolucao = 300
@@ -64,10 +60,9 @@ def gerar_imagem_alta_definicao_com_imagem(sigla, extenso, cor_sigla, caminho_im
         largura_incremental = draw.textlength(texto_incremental, font=fonte_secundaria(20))
 
         if largura_incremental > largura_linha - 30:
-            while c < len(words) and draw.textlength(texto_incremental_2, font=fonte_secundaria(20)) < largura_linha - 150:
+            while draw.textlength(texto_incremental_2, font=fonte_secundaria(20)) < largura_linha - 150:
                 texto_incremental_2 += words[c] + " "
                 c += 1
-
 
         novo_extenso = texto_incremental + '\n'
         if texto_incremental_2:
@@ -79,31 +74,22 @@ def gerar_imagem_alta_definicao_com_imagem(sigla, extenso, cor_sigla, caminho_im
     else:
         draw.text((x0_sigla + 7, 152), extenso, font=fonte_secundaria(20), fill="black")
     
-    imagem.save("/Baites/UFMA_logo/" + nome_arquivo_saida + ".png", dpi=(resolucao, resolucao))
+    imagem.save(nome_arquivo_saida + ".png", dpi=(resolucao, resolucao))
 
-##########################################################################################################  
 def fonte_principal(sz):
-    # Sua função para a fonte principal
-    return ImageFont.truetype("/Baites/UFMA_logo/assets/Montserrat-Bold.ttf", size=sz)
+    return ImageFont.truetype("F:/Baites/UFMA_logo/assets/Montserrat-Bold.ttf", size=sz)
 
-##########################################################################################################
 def fonte_secundaria(sz):
-    # Sua função para a fonte secundária
-    return ImageFont.truetype("/Baites/UFMA_logo/assets/Montserrat-SemiBold.ttf", size=sz)
+    return ImageFont.truetype("F:/Baites/UFMA_logo/assets/Montserrat-SemiBold.ttf", size=sz)
 
-# Rota para a página inicial
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        sigla = request.form['sigla']
-        extenso = request.form['extenso']
-        caminho_imagem = '/Baites/UFMA_logo/assets/brasao-normal.png'  # Substitua pelo caminho da sua imagem
-        nome_do_arquivo = "logomarca_com_imagem_hd"
-        cor_black = (0,0,0)
-        gerar_imagem_alta_definicao_com_imagem(sigla, extenso, cor_black, caminho_imagem, nome_do_arquivo, cor_pastel_dark,)
-        return send_file(nome_do_arquivo + ".png", as_attachment=True)
-        # return send_file(nome_do_arquivo + ".png", as_attachment=True, attachment_filename='/caminho/para/seu/diretorio/' + nome_do_arquivo + ".png")
-    return render_template('index.html')
+# CORES
+cor_pastel_dark = (212,178,119)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Exemplo de uso
+sigla = "BAITES"
+extenso = "SOLUÇÕES INTELIGENTES E SUSTENTÁVEIS TRANSFORMANDO VIDAS"
+
+caminho_da_imagem = 'F:/Baites/UFMA_logo/assets/brasao-normal.png'  # Substitua pelo caminho da sua imagem
+nome_do_arquivo = "logomarca_com_imagem_hd"
+cor_black = (0,0,0)
+gerar_imagem_alta_definicao_com_imagem(sigla, extenso, cor_black, caminho_da_imagem, nome_do_arquivo)
